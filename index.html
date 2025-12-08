@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sea Home</title>
+    <style>
+        /* ===== WhatsApp Floating Button ===== */
+        .whatsapp {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 68px;
+            height: 68px;
+            background: #25d366;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+            z-index: 999;
+            transition: .2s;
+        }
+
+            .whatsapp:hover {
+                transform: scale(1.1);
+            }
+
+            .whatsapp img {
+                width: 36px;
+                filter: brightness(0) invert(1);
+            }
+
+        /* ===== CTA ===== */
+        .cta {
+            text-align: center;
+            padding: 70px 20px;
+            background: #ffffffa8;
+            backdrop-filter: blur(6px);
+            border-radius: 18px;
+            max-width: 900px;
+            margin: 60px auto;
+        }
+
+            .cta h2 {
+                font-size: 32px;
+                margin-bottom: 10px;
+                color: #0b2b4a;
+            }
+
+            .cta p {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+
+        .cta-btn {
+            background: #0b2b4a;
+            color: #fff;
+            padding: 14px 32px;
+            font-size: 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+            .cta-btn:hover {
+                opacity: .8;
+            }
+
+        /* ===== POPUP форма ===== */
+        .form-popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: .3s;
+        }
+
+            .form-popup.show {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+        .form-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            width: 320px;
+            position: relative;
+            animation: fadeUp .3s ease;
+        }
+
+            .form-box input {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 12px;
+            }
+
+            .form-box button {
+                width: 100%;
+                padding: 12px;
+                background: #0b2b4a;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+            }
+
+            .form-box .close {
+                position: absolute;
+                right: 14px;
+                top: 8px;
+                font-size: 24px;
+                cursor: pointer;
+            }
+
+        @keyframes fadeUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ===== Scroll Animation Section ===== */
+        .scroll-section {
+            max-width: 1100px;
+            margin: 100px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 120px;
+        }
+
+        .scroll-item {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity .8s ease, transform .8s ease;
+        }
+
+            .scroll-item img {
+                width: 420px;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            }
+
+            .scroll-item .text {
+                font-size: 28px;
+                font-weight: 600;
+                max-width: 450px;
+                color: #0b2b4a;
+                opacity: 0;
+                transform: translateY(20px);
+                transition: .8s ease .2s;
+            }
+
+            /* Лево-картинка / Право-текст */
+            .scroll-item.left {
+                flex-direction: row;
+            }
+
+            /* Право-картинка / Лево-текст */
+            .scroll-item.right {
+                flex-direction: row-reverse;
+            }
+
+            /* Появление */
+            .scroll-item.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+                .scroll-item.show .text {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+
+        /* ===== Базовые стили / сброс ===== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Inter, sans-serif;
+        }
+
+        body {
+            background: #f8f9fb;
+            color: #212529;
+            line-height: 1.5;
+            background: #fff7e6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* ===== Шапка ===== */
+        header.topbar {
+            background: #fff7e6;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .topbar .nav {
+            display: flex;
+            gap: 18px;
+        }
+
+            .topbar .nav a {
+                font-size: 14px;
+                color: #333;
+                opacity: 0.85;
+            }
+
+        /* ===== Hero / Главный визуальный блок ===== */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            background: url('photo_2025-12-06_20-25-00.jpg') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-align: center;
+        }
+
+            .hero .overlay {
+                position: absolute;
+                inset: 0;
+                background: rgba(0,0,0,0.45);
+            }
+
+            .hero .content {
+                position: relative;
+                z-index: 2;
+                max-width: 800px;
+                padding: 0 20px;
+            }
+
+                .hero .content h1 {
+                    font-size: 48px;
+                    margin-bottom: 350px;
+                }
+
+                .hero .content p {
+                    font-size: 25px;
+                    opacity: 0.9;
+                }
+
+        /* ===== Блок «О проекте» ===== */
+        .about {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+            .about h2 {
+                font-size: 28px;
+                margin-bottom: 16px;
+                color: #0b2b4a;
+            }
+
+            .about p {
+                margin-bottom: 16px;
+                color: #444;
+            }
+
+            .about ul {
+                list-style: disc;
+                padding-left: 20px;
+                margin-bottom: 16px;
+            }
+
+                .about ul li {
+                    margin-bottom: 8px;
+                }
+
+        /* ===== Характеристики / цифры проекта ===== */
+        .specs {
+            background: #fff;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
+
+            .specs table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .specs th, .specs td {
+                padding: 12px;
+                border-bottom: 1px solid #e6e6e6;
+                text-align: left;
+                font-size: 16px;
+            }
+
+            .specs th {
+                background: #f9fafb;
+                color: #333;
+                font-weight: 600;
+            }
+
+        /* ===== Галерея / рендеры ===== */
+        .gallery {
+            max-width: 1000px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+            .gallery img {
+                border-radius: 8px;
+                cursor: pointer;
+                transition: transform 0.2s;
+            }
+
+                .gallery img:hover {
+                    transform: scale(1.02);
+                }
+
+        /* ===== Footer ===== */
+        footer {
+            background: #f2f2f4;
+            padding: 24px 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* ===== Адаптив ===== */
+        @media (max-width: 768px) {
+            .hero .content h1 {
+                font-size: 32px;
+            }
+
+            .hero {
+                height: 45vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== Шапка / меню ===== -->
+    <header class="topbar">
+        <div class="logo">Sea Home</div>
+        <nav class="nav">
+            <a href="#">Главная</a>
+            <a href="#">О проекте</a>
+            <a href="#">Инфраструктура</a>
+            <a href="#">Галерея</a>
+            <a href="#">Контакты</a>
+        </nav>
+    </header>
+
+    <!-- ===== Hero / визуальный блок ===== -->
+    <section class="hero">
+        <div class="overlay"></div>
+        <div class="content">
+            <h1>Sea Home</h1>
+            <p>Дом который приплывает готовым! Комфорт и уют рядом.</p>
+        </div>
+    </section>
+
+    <!-- ===== Блок О проекте / описание ===== -->
+    <section class="about">
+        <h2>О проекте</h2>
+        <p><font size=4>Мы - команда экспертов, которая превращает промышленные морские контейнеры в современное, комфортное и доступное жилье. Наша миссия - предлагать рынку недвижимости инновационные, быстрые и экологичные решения для жизни и отдыха.</p></font>
+        <h3>Инфраструктура & удобства</h3>
+        <ul>
+            <li>
+                Скорость: Сроки строительства в 2-3 раза быстрее классических.
+            </li>
+            <li>
+                Бюджет: Оптимальное соотношение цены, качества и функциональности.
+            </li>
+            <li>
+                Экологичность: Вторичное использование контейнеров и «зеленые» технологии.
+            </li>
+            <li>
+                Мобильность: Возможность транспортировки и модификации конструкции.
+            </li>
+        </ul>
+    </section>
+    <section class="scroll-section">
+
+        <div class="scroll-item left">
+            <img src="sea2.jpg" alt="">
+            <div class="text">Комфортное жильё у моря</div>
+        </div>
+
+        <div class="scroll-item right">
+            <img src="sea3.jpg" alt="">
+            <div class="text">Премиальные материалы и быстрая доставка</div>
+        </div>
+
+        <div class="scroll-item left">
+            <img src="sea1.jpg" alt="">
+            <div class="text">Экологичный и безопасный дом</div>
+        </div>
+
+        <div class="scroll-item right">
+            <img src="sea4.jpg" alt="">
+            <div class="text">Современный стиль — сразу готов к проживанию</div>
+        </div>
+
+    </section>
+    <!-- ===== КОНЕЦ АНИМАЦИОННОГО БЛОКА ===== -->
+    <!-- ===== Таблица ключевых характеристик ===== -->
+    <footer>
+        © 2025 Sea Home
+        <!-- ===== ЗАЯВКА ===== -->
+        <section class="cta">
+            <h2>Хотите получить консультацию?</h2>
+            <p>Оставьте ваш номер — мы свяжемся с вами в течение 10 минут.</p>
+
+            <button class="cta-btn" onclick="document.querySelector('.form-popup').classList.add('show')">
+                Оставить заявку
+            </button>
+        </section>
+
+        <!-- ===== POPUP-форма ===== -->
+        <div class="form-popup">
+            <div class="form-box">
+                <h3>Оставьте заявку</h3>
+                <input type="text" placeholder="Ваше имя">
+                <input type="text" placeholder="Номер телефона">
+                <button>Отправить</button>
+
+                <span class="close" onclick="document.querySelector('.form-popup').classList.remove('show')">×</span>
+            </div>
+        </div>
+    </footer>
+    <script>
+        const items = document.querySelectorAll('.scroll-item');
+
+        function revealOnScroll() {
+            const triggerBottom = window.innerHeight * 0.85;
+
+            items.forEach(item => {
+                const boxTop = item.getBoundingClientRect().top;
+
+                if (boxTop < triggerBottom) {
+                    item.classList.add('show');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+    </script>
+    <a href="https://wa.me/994552939822" class="whatsapp" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+             class="whatsapp-icon">
+
+    </a>
+
+
+</body>
+</html>
